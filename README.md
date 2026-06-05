@@ -69,4 +69,3 @@ Toggle between light and dark modes.
 
 Built with HTML, CSS, and JavaScript.
 
-⭐ If you found this project useful, give it a star.
