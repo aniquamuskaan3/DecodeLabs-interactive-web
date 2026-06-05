@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate God Mode Dashboard</title>
+<style>
+:root{
+--bg:#f4f7fb;--card:#fff;--text:#111827;--primary:#6366f1;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:var(--bg);color:var(--text)}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+width:240px;background:linear-gradient(180deg,#0f172a,#312e81);
+color:#fff;padding:20px;position:fixed;height:100vh
+}
+.sidebar h2{margin-bottom:20px}
+.sidebar a{
+display:block;color:#fff;text-decoration:none;
+padding:12px;border-radius:10px;margin:8px 0;
+background:rgba(255,255,255,.05)
+}
+.sidebar a:hover{background:rgba(255,255,255,.15)}
+.main{margin-left:240px;padding:25px;width:100%}
+.page{display:none;animation:fade .3s}
+.page.active{display:block}
+.card{
+background:var(--card);padding:20px;border-radius:18px;
+box-shadow:0 8px 20px rgba(0,0,0,.08)
+}
+.grid{
+display:grid;gap:20px;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr))
+}
+.stat{font-size:32px;font-weight:bold;color:var(--primary)}
+.btn{
+background:var(--primary);color:#fff;border:none;
+padding:10px 15px;border-radius:10px;cursor:pointer
+}
+input,textarea{
+width:100%;padding:10px;margin:10px 0;
+border:1px solid #ddd;border-radius:10px
+}
+li{
+list-style:none;background:#8d012b00;padding:10px;
+margin:8px 0;border-radius:10px;
+display:flex;justify-content:space-between
+}
+.dark{
+--bg:#0f172a;--card:#1e293b;--text:#f8f8fc;
+}
+@keyframes fade{
+from{opacity:0;transform:translateY(15px)}
+to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<div class="sidebar">
+<h2>🚀 Interactive Website</h2>
+
+<a href="#" onclick="showPage('dashboard')">🏠 Dashboard</a>
+<a href="#" onclick="showPage('tasks')">✅ Tasks</a>
+<a href="#" onclick="showPage('notes')">📒 Notes</a>
+<a href="#" onclick="showPage('calculator')">🧮 Calculator</a>
+
+<hr style="margin:15px 0">
+
+<button class="btn" onclick="document.body.classList.toggle('dark')">
+🌙 Theme
+</button>
+</div>
+
+<div class="main">
+
+<div id="dashboard" class="page active">
+<h1>Dashboard</h1><br>
+
+<div class="grid">
+<div class="card"><div class="stat">500+</div>Users</div>
+<div class="card"><div class="stat">150+</div>Projects</div>
+<div class="card"><div class="stat">98%</div>Success</div>
+<div class="card"><div id="clock" class="stat"></div></div>
+</div>
+
+<br>
+
+<div class="card">
+<h2>💡 Quote Generator</h2><br>
+<p id="quote">Click button for motivation</p><br>
+<button class="btn" onclick="quote()">New Quote</button>
+</div>
+</div>
+
+<div id="tasks" class="page">
+<div class="card">
+<h2>📝 Task Manager</h2>
+<input id="taskInput" placeholder="Enter task">
+<button class="btn" onclick="addTask()">Add Task</button>
+<ul id="taskList"></ul>
+</div>
+</div>
+
+<div id="notes" class="page">
+<div class="card">
+<h2>📒 Notes</h2>
+<textarea id="notesBox" rows="10"></textarea>
+<button class="btn" onclick="saveNotes()">Save Notes</button>
+</div>
+</div>
+
+<div id="calculator" class="page">
+<div class="card">
+<h2>🧮 Calculator</h2>
+<input id="calc" placeholder="10+20*3">
+<button class="btn" onclick="calculate()">Calculate</button>
+<p id="result"></p>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+function clock(){
+document.getElementById('clock').innerText=
+new Date().toLocaleTimeString();
+}
+setInterval(clock,1000);
+clock();
+
+function addTask(){
+let t=document.getElementById('taskInput');
+if(!t.value.trim()) return;
+
+let li=document.createElement('li');
+li.innerHTML=`${t.value}
+<button onclick="this.parentElement.remove();saveTasks()">❌</button>`;
+
+document.getElementById('taskList').appendChild(li);
+saveTasks();
+t.value='';
+}
+
+function saveTasks(){
+localStorage.setItem('tasks',
+document.getElementById('taskList').innerHTML);
+}
+
+function saveNotes(){
+localStorage.setItem('notes',
+document.getElementById('notesBox').value);
+alert('Notes Saved');
+}
+
+function calculate(){
+try{
+document.getElementById('result').innerText=
+'Result: '+eval(document.getElementById('calc').value);
+}catch{
+document.getElementById('result').innerText='Invalid Expression';
+}
+}
+
+function quote(){
+const q=[
+'Code. Create. Conquer.',
+'Consistency wins.',
+'Progress beats perfection.',
+'Build something amazing.',
+'Dream big, ship bigger.'
+];
+document.getElementById('quote').innerText=
+q[Math.floor(Math.random()*q.length)];
+}
+
+window.onload=()=>{
+document.getElementById('taskList').innerHTML=localStorage.getItem('tasks')||'';
+document.getElementById('notesBox').value=localStorage.getItem('notes')||'';
+}
+</script>
+
+</body>
+</html>
